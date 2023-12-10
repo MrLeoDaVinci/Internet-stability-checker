@@ -4,6 +4,7 @@ setlocal enabledelayedexpansion
 set "PASS=0"
 set "FAIL=0"
 set /a "MAX_TIME=0"
+set /a "TOTAL_TIME=0"
 set "COUNTDOWN=5"
 
 :Welcome
@@ -24,6 +25,7 @@ if !errorlevel! equ 0 (
         echo Response Time: !pingTime! ms
 
         set /a "PASS+=1"
+        set /a "TOTAL_TIME+=pingTime"
         if !pingTime! gtr !MAX_TIME! set "MAX_TIME=!pingTime!"
     )
 ) else (
@@ -35,6 +37,10 @@ echo.
 echo Pass Count: %PASS%
 echo Fail Count: %FAIL%
 echo Max Response Time: %MAX_TIME% ms
+if %PASS% gtr 0 (
+    set /a "AVG_TIME=TOTAL_TIME/PASS"
+    echo Average Response Time: %AVG_TIME% ms
+)
 
 timeout /nobreak /t 1 >nul
 goto PingLoop
